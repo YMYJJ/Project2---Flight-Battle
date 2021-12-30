@@ -8,6 +8,31 @@ pygame.display.set_caption('SPACE WAR')
 icon = pygame.image.load('ufo.png')
 pygame.display.set_icon(icon)
 bgImg = pygame.image.load('bg.png')
+is_over = False
+
+# background music
+pygame.mixer.music.load('bg.wav')
+pygame.mixer.music.play(-1)
+
+# hit music
+hit_sound = pygame.mixer.Sound('laser.wav')
+
+# score mod
+score = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+def show_score():
+    text = f"SCORE: {score}"
+    score_render = font.render(text, True, (255, 255, 255))
+    screen.blit(score_render, (10, 10))
+
+# over mod
+overfont = pygame.font.Font('freesansbold.ttf', 64)
+def check_over():
+    if is_over:
+        over_text = "GAME OVER"
+        over_render = overfont.render(over_text, True, (255, 200, 50))
+        screen.blit(over_render, (200, 250))
 
 #player
 playerImg = pygame.image.load('Plane.png')
@@ -44,6 +69,7 @@ for i in range(num_of_enemy):
     enemies.append(enemy())
 
 def show_enemy():
+    global is_over
     for e in enemies:
         screen.blit(e.Img, (e.x, e.y))
         e.x += e.step
@@ -51,8 +77,9 @@ def show_enemy():
         if (e.x > 736 or e.x < 0):
             e.step *= -1
             e.y += 40
-
-
+            if e.y > 450:
+                is_over = True
+                enemies.clear()
 
 # bullet
 class bullet:
@@ -62,16 +89,16 @@ class bullet:
         self.y = py + 10
         self.step = 10   #bullet moving speed
     def hit(self):
+        global score
         for e in enemies:
             if(distance(self.x, self.y, e.x, e.y) < 30):
                 # hit
+                hit_sound.play()
                 bullets.remove(self)
                 e.reset()
+                score += 1
 
 bullets = [] # save bullets
-
-
-
 
 
 # bullet show and move         
@@ -94,6 +121,7 @@ def distance(bx, by, ex, ey):
 running = True
 while running:
     screen.blit(bgImg, (0,0))
+    show_score()
     for event in pygame.event.get():
         #quit
         if event.type == pygame.QUIT:
@@ -117,5 +145,7 @@ while running:
     
     move_player()
     show_enemy()
+    check_over()
     show_bullet()
+    
     pygame.display.update()
