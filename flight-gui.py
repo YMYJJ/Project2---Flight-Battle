@@ -5,17 +5,17 @@ import math
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('SPACE WAR')
-icon = pygame.image.load('ufo.png')
+icon = pygame.image.load('images\\ufo.png')
 pygame.display.set_icon(icon)
-bgImg = pygame.image.load('bg.png')
+bgImg = pygame.image.load('images\\bg.png')
 is_over = False
 
 # background music
-pygame.mixer.music.load('bg.wav')
+pygame.mixer.music.load('images\\bg.wav')
 pygame.mixer.music.play(-1)
 
 # hit music
-hit_sound = pygame.mixer.Sound('laser.wav')
+hit_sound = pygame.mixer.Sound('images\\laser.wav')
 
 # score mod
 score = 0
@@ -35,7 +35,7 @@ def check_over():
         screen.blit(over_render, (200, 250))
 
 #player
-playerImg = pygame.image.load('Plane.png')
+playerImg = pygame.image.load('images\\Plane.png')
 px = 400 #player x-axis
 py = 500 #player y-axis
 ps = 0 #player step
@@ -55,7 +55,7 @@ num_of_enemy = 6
 
 class enemy:
     def __init__(self):
-        self.Img = pygame.image.load('enemy.png')
+        self.Img = pygame.image.load('images\\enemy.png')
         self.x = random.randint(150, 600)
         self.y = random.randint(50, 250)
         self.step = random.randint(2, 3) # enemy step
@@ -100,6 +100,25 @@ class bullet:
 
 bullets = [] # save bullets
 
+# #enemy bullets
+# class enemy_bullet:
+#     def __init__(self):               
+#         self.Img = pygame.image.load('enemy-bullet.png')
+#         for e in enemies:
+#             self.x = e.x + 16
+#             self.y = e.y + 10
+#         self.step = 10   #bullet moving speed
+#     def hit(self):
+#         global score
+#         for e in enemies:
+#             if(distance(self.x, self.y, p.x, p.y) < 30):
+#                 # hit
+#                 hit_sound.play()
+#                 enemy_bullets.remove(self)
+#                 e.reset()
+#                 score += 1
+
+# enemy_bullet = []
 
 # bullet show and move         
 def show_bullet():
