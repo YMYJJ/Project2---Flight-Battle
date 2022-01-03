@@ -5,6 +5,7 @@ import traceback
 from pygame.locals import *
 import random
 import myplane
+import enemy
 
 pygame.init()
 pygame.mixer.init()
@@ -41,11 +42,44 @@ enemy3_down_sound.set_volume(0.5)
 me_down_sound = pygame.mixer.Sound("sound/me_down.wav")
 me_down_sound.set_volume(0.2)
 
+def add_small_enemies(group1, group2, number):
+    for i in range(number):
+        e1 = enemy.SmallEnemy(bg_size)
+        group1.add(e1)
+        group2.add(e1)
+
+def add_mid_enemies(group1, group2, number):
+    for i in range(number):
+        e1 = enemy.MidEnemy(bg_size)
+        group1.add(e1)
+        group2.add(e1)
+
+def add_big_enemies(group1, group2, number):
+    for i in range(number):
+        e1 = enemy.BigEnemy(bg_size)
+        group1.add(e1)
+        group2.add(e1)
+
 def main():
     pygame.mixer.music.play()\
     
     #generate user plane
     me = myplane.MyPlane(bg_size)
+
+    # generate enemies
+    enemies = pygame.sprite.Group()
+
+    # generate small enemies
+    small_enemies = pygame.sprite.Group()
+    add_small_enemies(small_enemies, enemies, 15)
+    # generate mid enemies
+    mid_enemies = pygame.sprite.Group()
+    add_mid_enemies(small_enemies, enemies, 4)
+    # generate small enemies
+    big_enemies = pygame.sprite.Group()
+    add_big_enemies(small_enemies, enemies, 2)
+
+
 
     clock = pygame.time.Clock()
 
