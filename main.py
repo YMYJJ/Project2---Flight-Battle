@@ -90,6 +90,13 @@ def main():
 
     delay = 100
 
+    # hit pircture
+    e1_destroy_index = 0
+    e2_destroy_index = 0
+    e3_destroy_index = 0
+    me_destroy_index = 0
+
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -115,11 +122,72 @@ def main():
         screen.blit(background, (0, 0))
 
         #draw the plane
+        for each in big_enemies:
+            if each.active:
+                each.move()
+                if switch:
+                    screen.blit(each.image1, each.rect)
+                else:
+                    screen.blit(each.image2, each.rect)
+
+                # play music
+                if each.rect.bottom > - 50:
+                    enemy3_fly_sound.play()
+            else:
+                #  destroy
+                enemy3_down_sound.play()
+                if not (delay % 3):
+                    screen.blit(each.destroy_images[e3_destroy_index], each.rect)
+                    e3_destroy_index =  (e3_destroy_index + 1) % 6
+                    if e3_destroy_index == 0:
+                        each.reset()
         
-        if switch:
-            screen.blit(me.image1, me.rect)
-        else:
-            screen.blit(me.image2, me.rect)
+        for each in mid_enemies:
+            if each.active:
+                each.move()
+                screen.blit(each.image1, each.rect)
+            else:
+                #  destroy
+                enemy2_down_sound.play()
+                if not (delay % 3):
+                    screen.blit(each.destroy_images[e2_destroy_index], each.rect)
+                    e2_destroy_index =  (e2_destroy_index + 1) % 6
+                    if e2_destroy_index == 0:
+                        each.reset()
+
+
+        
+        for each in small_enemies:
+            if each.active:
+                each.move()
+                screen.blit(each.image1, each.rect)
+            else:
+                #  destroy
+                enemy1_down_sound.play()
+                if not (delay % 3):
+                    screen.blit(each.destroy_images[e1_destroy_index], each.rect)
+                    e1_destroy_index =  (e1_destroy_index + 1) % 4
+                    if e1_destroy_index == 0:
+                        each.reset()
+        # test if get collided
+        enemies_down = pygame.sprite.spritecollide(me, enemies, False, pygame.sprite.collide_mask)
+        if enemies_down and not me.invincible:
+            me.active = False
+            for e in enemies_down:
+                e.active = False
+
+        #draw plane
+        if me.active:
+            if switch:
+                screen.blit(me.image1, me.rect)
+            else:
+                screen.blit(me.image2, me.rect)
+                me_down_sound.play()
+                if not (delay % 3):
+                    screen.blit(each.destroy_images[me_destroy_index], each.rect)
+                    me_destroy_index =  (me_destroy_index + 1) % 4
+                    if me_destroy_index == 0:
+                        each.reset()
 
         if (not delay % 5):
             switch = not switch
